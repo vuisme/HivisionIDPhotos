@@ -1,24 +1,19 @@
-FROM python:3.10-alpine
-
-# Cài đặt glibc cho Alpine
-RUN apk --no-cache add \
-    libstdc++ \
-    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk \
-    && apk add glibc-2.35-r0.apk
+# Sử dụng python:3.10-slim thay vì alpine
+FROM python:3.10-slim
 
 # Cài đặt các gói hệ thống cần thiết
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
-    mesa-gl \
-    glib
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Sao chép tệp yêu cầu
 COPY requirements.txt requirements-app.txt ./
 
-# Cài đặt các phụ thuộc Python
+# Cài đặt các phụ thuộc Python, loại bỏ cache để giảm kích thước image
 RUN pip install --no-cache-dir -r requirements.txt -r requirements-app.txt
 
 # Sao chép mã nguồn vào container
