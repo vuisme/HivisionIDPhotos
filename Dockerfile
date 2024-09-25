@@ -1,13 +1,12 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk add --no-cache \
     ffmpeg \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+    mesa-gl \
+    glib
 
 WORKDIR /app
+
 
 COPY requirements.txt requirements-app.txt ./
 
