@@ -21,9 +21,6 @@ jobs:
       - name: Install dependencies
         run: pip install requests tqdm
 
-      - name: Download models
-        run: python scripts/download_model.py --models all
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
